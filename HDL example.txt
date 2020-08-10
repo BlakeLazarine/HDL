@@ -1,0 +1,34 @@
+module name
+	input name[num]
+	input name[num]
+	input name[num]
+
+	output name[num]
+	output name[num]
+	output name[num]
+
+	wire name[num] = eqn
+
+	reg name[num] (default, posedge variable) = eqn
+	//hold list of variables that trigger reg changes
+
+	const name val
+
+	assign out_name = eqn
+end
+
+
+if statements are not allowed, ternary operators are (those are muxes)
+
+switch statements also allowed
+syntax
+
+wire name[8] = switch(other_name)
+	case 0:
+		eqn
+	case 2:
+		eqn
+	default:
+		eqn
+
+MUST have default
