@@ -98,6 +98,7 @@ class Module:
             if reg in e:
                 e = re.sub(r'(?<![a-zA-Z0-9])' + reg + r'(?![a-zA-Z0-9])', "self.reg_vals[" + str(idx) + ']', e)
 
+
         # print(e)
         if i in self.outputs:
             self.out_eqns[self.outputs.index(i)] = e

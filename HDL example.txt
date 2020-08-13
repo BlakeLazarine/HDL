@@ -14,6 +14,9 @@ module name
 
 	const name val
 
+	mod name type ([in1, in2, in3],[out1, out2, out3])
+	//out1 out2 out3 are declared in that line
+
 	assign out_name = eqn
 end
 
@@ -24,11 +27,8 @@ switch statements also allowed
 syntax
 
 wire name[8] = switch(other_name)
-	case 0:
-		eqn
-	case 2:
-		eqn
-	default:
-		eqn
+	case 0: eqn
+	case 2: eqn
+	default: eqn
 
 MUST have default

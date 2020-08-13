@@ -1,0 +1,8 @@
+module first
+    input abc[32]
+    input d[32]
+    output e[32]
+
+    wire f[32] = abc + d
+
+    assign e = f + d
