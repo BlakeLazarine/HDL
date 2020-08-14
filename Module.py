@@ -1,4 +1,6 @@
 import re
+import ternary
+import parser
 
 
 class Register:
@@ -27,32 +29,37 @@ class Module:
         self.wire_eqns = []
 
     def assign(self, name, eqn):
-        for idx in range(len(self.intermediaries)):
-            intermed = self.intermediaries[idx]
-            e = re.sub(r'(?<![a-zA-Z0-9])' + intermed + r'(?![a-zA-Z0-9])', "int_vals[" + str(idx) + ']', e)
+
+        eqn = ternary.convert_ternary(eqn)
+
+        for idx in range(len(self.wires)):
+            wire = self.wires[idx]
+            eqn = re.sub(r'(?<![a-zA-Z0-9])' + wire + r'(?![a-zA-Z0-9])', "wire_vals[" + str(idx) + ']', eqn)
             # e = e.replace(intermed, "int_vals[" + str(idx) + ']')
 
         for idx in range(len(self.inputs)):
             inp = self.inputs[idx]
             # print(inp, e, inp in e)
 
-            e = re.sub(r'(?<![a-zA-Z0-9])' + inp + r'(?![a-zA-Z0-9])', "in_vals[" + str(idx) + ']', e)
+            eqn = re.sub(r'(?<![a-zA-Z0-9])' + inp + r'(?![a-zA-Z0-9])', "self.in_vals[" + str(idx) + ']', eqn)
             # e = e.replace(inp, "in_vals[" + str(idx) + ']')
 
         for idx in range(len(self.regs)):
             reg = self.regs[idx]
-            if reg in e:
-                e = re.sub(r'(?<![a-zA-Z0-9])' + reg + r'(?![a-zA-Z0-9])', "self.reg_vals[" + str(idx) + ']', e)
+            if reg.name in eqn:
+                eqn = re.sub(r'(?<![a-zA-Z0-9])' + reg.name + r'(?![a-zA-Z0-9])', "self.regs[" + str(idx) + '].value', eqn)
 
         # print(e)
-        if i in self.outputs:
-            self.out_eqns[self.outputs.index(i)] = e
-        elif i in self.intermediaries:
-            self.int_eqns[self.intermediaries.index(i)] = e
-        elif i in self.regs:
-            self.reg_eqns[self.regs.index(i)] = e
+        if name in self.outputs:
+            self.out_eqns[self.outputs.index(name)] = eqn
+        elif name in self.wires:
+            self.wire_eqns[self.wires.index(name)] = eqn
         else:
-            print(i, "not a defined value")
+            for i in self.regs:
+                if i.name == name:
+                    i.eqn = eqn
+                    return
+            print(name, 'is not a defined value')
 
     def add_input(self, name, size):
         self.inputs.append(name)
@@ -68,13 +75,38 @@ class Module:
         self.assign(name, eqn)
 
     def add_register(self, name, size, default, trig_sign, trigger, eqn=''):
-        trigstr = '!' if trig_sign == 'negedge' else ''
+        trigstr = 'not ' if trig_sign == 'negedge' else ''
         #append the array value name for trigger
 
         self.regs.append(Register(name, default, trigstr, eqn))
 
     def update(self):
-        pass
+        wire_vals = [None for i in range(len(self.wires))]
+        while None in wire_vals:
+            for i in range(len(self.wires)):
+                if not wire_vals[i] is None:
+                    continue
+                wire_match = re.findall(r'int_vals\[(\d+)\]', self.wire_eqns[i])
+                for m in wire_match:
+                    if wire_vals[m] is None:
+                        break
+                else:
+                    wire_vals[i] = eval(parser.expr(self.wire_eqns[i]).compile())
+
+        out_vals = [None for i in range(len(self.outputs))]
+        # print(in_vals)
+        # print(int_vals)
+        for i in range(len(self.outputs)):
+            # print(self.out_eqns[i])
+            out_vals[i] = eval(parser.expr(self.out_eqns[i]).compile())
+            # print('out', eval(parser.expr(self.out_eqns[i]).compile()))
+
+        for r in self.regs:
+            if eval(parser.expr(r.trigger).compile()) and not r.trig_prev:
+                r.value = eval(parser.expr(r.eqn).compile())
+            r.trig_prev = eval(parser.expr(r.trigger).compile())
+
+        return out_vals
 
     def set_in(self, name, val):
         if name in self.inputs:

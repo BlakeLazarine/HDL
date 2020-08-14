@@ -21,9 +21,11 @@ def convert_ternary(s):
 
     return s
 
-print(convert_ternary('(d ? e : f)'))
-print(convert_ternary('a + b ? c : (d ? e : f)'))
-print(convert_ternary('a + b ? c : ((d+g)*h ? e : f)'))
+
+if __name__ == "__main__":
+    print(convert_ternary('(d ? e : f)'))
+    print(convert_ternary('a + b ? c : (d ? e : f)'))
+    print(convert_ternary('a + b ? c : ((d+g)*h ? e : f)'))
 
 
-print(convert_ternary('a + b ? (d ? e : f) : c'))
+    print(convert_ternary('a + b ? (d ? e : f) : c'))

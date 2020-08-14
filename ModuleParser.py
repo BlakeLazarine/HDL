@@ -72,3 +72,6 @@ while line:
 
 
 mod.print_info()
+mod.set_in('abc', 1)
+mod.set_in('d', 2)
+print(mod.update())
