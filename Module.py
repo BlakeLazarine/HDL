@@ -8,7 +8,7 @@ class Register:
 
     def __init__(self, name, default, trigger, eqn=''):
         self.name = name
-        self.value = default
+        self.value = int(default)
         self.trigger = trigger #string
         self.trig_prev = False
         self.eqn = eqn
@@ -74,11 +74,16 @@ class Module:
         self.wire_eqns.append('')
         self.assign(name, eqn)
 
-    def add_register(self, name, size, default, trig_sign, trigger, eqn=''):
+    def add_reg(self, name, size, default, trig_sign, trigger, eqn=''):
         trigstr = 'not ' if trig_sign == 'negedge' else ''
         #append the array value name for trigger
+        if trigger in self.inputs:
+            trigstr += 'self.in_vals[' + str(self.inputs.index(trigger)) + ']'
+        if trigger in self.wires:
+            trigstr += 'self.wire_vals[' + str(self.wires.index(trigger)) + ']'
 
-        self.regs.append(Register(name, default, trigstr, eqn))
+        self.regs.append(Register(name, default, trigstr))
+        self.assign(name, eqn)
 
     def update(self):
         wire_vals = [None for i in range(len(self.wires))]
@@ -102,6 +107,7 @@ class Module:
             # print('out', eval(parser.expr(self.out_eqns[i]).compile()))
 
         for r in self.regs:
+            # print('hello', r.trigger)
             if eval(parser.expr(r.trigger).compile()) and not r.trig_prev:
                 r.value = eval(parser.expr(r.eqn).compile())
             r.trig_prev = eval(parser.expr(r.trigger).compile())

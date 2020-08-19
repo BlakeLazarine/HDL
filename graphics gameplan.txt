@@ -1,0 +1,8 @@
+create code that generates a line from one point to another
+create layers of node points based  what feeds into their equations as inputs
+work out loop arounds (registers)
+work out register triggers
+optimize node vertical placement
+
+
+okay so for the intermediates, maybe use the same algorithm as in update?

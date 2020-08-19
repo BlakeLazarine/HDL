@@ -71,7 +71,17 @@ while line:
     line = vtext.readline()
 
 
-mod.print_info()
+# mod.print_info()
 mod.set_in('abc', 1)
 mod.set_in('d', 2)
+print(mod.update())
+mod.set_in('up', 1)
+print(mod.update())
+mod.set_in('up', 0)
+mod.set_in('abc', 5)
+print(mod.update())
+mod.set_in('up', 1)
+print(mod.update())
+mod.set_in('up', 0)
+mod.set_in('up', 1)
 print(mod.update())
