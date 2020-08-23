@@ -16,4 +16,6 @@ def connect_points(a, b, d):
 
 connect_points((128,128), (512, 512), dwg)
 
+dwg.add(dwg.rect(insert = (1000, 500), size=(200,200), fill= 'white', stroke='black', stroke_width=3))
+
 dwg.save()

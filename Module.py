@@ -80,7 +80,7 @@ class Module:
         if trigger in self.inputs:
             trigstr += 'self.in_vals[' + str(self.inputs.index(trigger)) + ']'
         if trigger in self.wires:
-            trigstr += 'self.wire_vals[' + str(self.wires.index(trigger)) + ']'
+            trigstr += 'wire_vals[' + str(self.wires.index(trigger)) + ']'
 
         self.regs.append(Register(name, default, trigstr))
         self.assign(name, eqn)
@@ -91,7 +91,7 @@ class Module:
             for i in range(len(self.wires)):
                 if not wire_vals[i] is None:
                     continue
-                wire_match = re.findall(r'int_vals\[(\d+)\]', self.wire_eqns[i])
+                wire_match = re.findall(r'wire_vals\[(\d+)\]', self.wire_eqns[i])
                 for m in wire_match:
                     if wire_vals[m] is None:
                         break
@@ -134,4 +134,3 @@ class Module:
         print('--Regs--')
         for r in self.regs:
             print(r.name, r.value, r.trigger, r.eqn)
-

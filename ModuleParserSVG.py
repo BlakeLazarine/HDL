@@ -4,6 +4,8 @@ import ModToSVG
 vtext = open("basic.laz")
 line = vtext.readline()
 mod = Module.Module()
+dwg = svgwrite.Drawing('basic.svg', profile='full')
+in_x = 100
 while line:
     # print(line)
     line = re.sub(' +', ' ', line)
@@ -17,7 +19,7 @@ while line:
             full = re.match(r' *input (\w+)\[(\d+)\] *', line)
             if full:
                 mod.add_input(full.group(1), int(full.group(2)))
-
+                dwg.add()-------------------------------------------------------------------------------------------------------------
             else:
                 print('syntax error in line:', line)
         elif command.group(1) == 'output':

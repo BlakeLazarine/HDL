@@ -2,10 +2,12 @@ module first
     input abc[32]
     input d[32]
     input up[1]
-    output e[32]
-    output o[32]
+    input g[1]
 
-    wire f[32] = abc + d
+    output o[32]
+    output e[32]
+
+    wire f[32] = abc + d + g
 
     reg r[32] (0, posedge up) = f + d
     assign e = f + d
