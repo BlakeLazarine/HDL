@@ -53,6 +53,8 @@ def draw(mod):
                     connect_points(wire_locs[int(wire_match[m])], (min_x - l/2, y - l/2 + (m+1) * l / (num + 1)), dwg, m, num)
                 for m in range(len(in_match)):
                     connect_points(in_locs[int(in_match[m])], (min_x - l/2, y - l/2 + (m + 1 + len(wire_match)) * l / (num + 1)), dwg, m + len(wire_match), num)
+
+
     for i in range(len(mod.outputs)):
         dwg.add(dwg.circle(center=(furthest_x + gap, 100 + 100*i), r=40))
         dwg.add(dwg.text(mod.outputs[i], insert=(furthest_x + gap, 100 + 100*i), font_size='30px', fill='red'))

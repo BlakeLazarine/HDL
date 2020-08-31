@@ -35,21 +35,17 @@ class Module:
         for idx in range(len(self.wires)):
             wire = self.wires[idx]
             eqn = re.sub(r'(?<![a-zA-Z0-9])' + wire + r'(?![a-zA-Z0-9])', "wire_vals[" + str(idx) + ']', eqn)
-            # e = e.replace(intermed, "int_vals[" + str(idx) + ']')
 
         for idx in range(len(self.inputs)):
             inp = self.inputs[idx]
-            # print(inp, e, inp in e)
 
             eqn = re.sub(r'(?<![a-zA-Z0-9])' + inp + r'(?![a-zA-Z0-9])', "self.in_vals[" + str(idx) + ']', eqn)
-            # e = e.replace(inp, "in_vals[" + str(idx) + ']')
 
         for idx in range(len(self.regs)):
             reg = self.regs[idx]
             if reg.name in eqn:
                 eqn = re.sub(r'(?<![a-zA-Z0-9])' + reg.name + r'(?![a-zA-Z0-9])', "self.regs[" + str(idx) + '].value', eqn)
 
-        # print(e)
         if name in self.outputs:
             self.out_eqns[self.outputs.index(name)] = eqn
         elif name in self.wires:
@@ -99,15 +95,10 @@ class Module:
                     wire_vals[i] = eval(parser.expr(self.wire_eqns[i]).compile())
 
         out_vals = [None for i in range(len(self.outputs))]
-        # print(in_vals)
-        # print(int_vals)
         for i in range(len(self.outputs)):
-            # print(self.out_eqns[i])
             out_vals[i] = eval(parser.expr(self.out_eqns[i]).compile())
-            # print('out', eval(parser.expr(self.out_eqns[i]).compile()))
 
         for r in self.regs:
-            # print('hello', r.trigger)
             if eval(parser.expr(r.trigger).compile()) and not r.trig_prev:
                 r.value = eval(parser.expr(r.eqn).compile())
             r.trig_prev = eval(parser.expr(r.trigger).compile())
